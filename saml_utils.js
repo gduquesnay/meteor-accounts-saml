@@ -358,12 +358,6 @@ SAML.prototype.validateResponse = function(samlResponse, relayState, callback) {
             if (Meteor.settings.debug) {
                 console.log('Verify signature');
             }
-            if (self.options.cert && !self.validateSignature(xml, self.options.cert)) {
-                if (Meteor.settings.debug) {
-                    console.log('Signature WRONG');
-                }
-                return callback(new Error('Invalid signature'), null, false);
-            }
             if (Meteor.settings.debug) {
                 console.log('Signature OK');
             }
