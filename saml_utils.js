@@ -379,8 +379,8 @@ SAML.prototype.validateResponse = function (samlResponse, relayState, callback) 
 
         const profile = {};
 
-        if (response.hasAttribute('InResponseTo')) {
-          profile.inResponseToId = response.getAttribute('InResponseTo');
+        if (response.hasAttribute('inResponseToId')) {
+          profile.inResponseToId = response.getAttribute('inResponseToId');
         }
 
         const issuer = assertion.getElementsByTagNameNS('urn:oasis:names:tc:SAML:2.0:assertion', 'Issuer')[0];
