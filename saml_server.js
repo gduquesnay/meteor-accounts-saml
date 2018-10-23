@@ -1,4 +1,5 @@
 if (!Accounts.saml) {
+  console.log('Creating a new Accounts.saml');
   Accounts.saml = {};
 }
 
@@ -228,13 +229,15 @@ Accounts.registerLoginHandler(function (loginRequest) {
 });
 
 Accounts.saml._loginResultForCredentialToken = {};
+console.log('Just reset the accounts');
 
 Accounts.saml.hasCredential = function (credentialToken) {
   return _.has(Accounts.saml._loginResultForCredentialToken, credentialToken);
 };
 
 Accounts.saml.retrieveCredential = function (credentialToken) {
-    // The credentialToken in all these functions corresponds to SAMLs inResponseTo field and is mandatory to check.
+  // The credentialToken in all these functions corresponds to SAMLs inResponseTo field and is mandatory to check.
+  console.log('retrieveCredential', credentialToken, Accounts.saml._loginResultForCredentialToken);
   const result = Accounts.saml._loginResultForCredentialToken[credentialToken];
   delete Accounts.saml._loginResultForCredentialToken[credentialToken];
   return result;
@@ -366,17 +369,17 @@ middleware = function (req, res, next) {
         }
         Accounts.saml.RelayState = req.body.RelayState;
         _saml.validateResponse(req.body.SAMLResponse, req.body.RelayState, function (err, profile, loggedOut) {
-          console.log("Validating response callback", err, profile, loggedOut);
+          console.log('Validating response callback', err, profile, loggedOut);
           if (err) { throw new Error(`Unable to validate response url: ${err}`); }
 
           const credentialToken = profile.inResponseToId || profile.InResponseTo || samlObject.credentialToken;
           if (!credentialToken) { throw new Error('Unable to determine credentialToken'); }
-          console.log("Saving credential token and profile", credentialToken, profile)
+          console.log('Saving credential token and profile', credentialToken, profile);
           Accounts.saml._loginResultForCredentialToken[credentialToken] = {
             profile,
           };
-          console.log("Credential stores now", Accounts.saml._loginResultForCredentialToken);
-          console.log("Validate complete");
+          console.log('Credential stores now', Accounts.saml._loginResultForCredentialToken);
+          console.log('Validate complete');
           closePopup(res);
         });
         break;
