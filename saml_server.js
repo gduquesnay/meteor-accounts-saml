@@ -258,13 +258,18 @@ WebApp.connectHandlers.use(bodyParser.urlencoded({
 middleware = function (req, res, next) {
     // Make sure to catch any exceptions because otherwise we'd crash
     // the runner
+  if (Meteor.settings.debug) {
+    console.log('SAML Middleware called: ', req.url);
+  }
   try {
     const samlObject = samlUrlToObject(req.url);
     if (!samlObject || !samlObject.serviceName) {
       next();
       return;
     }
-
+    if (Meteor.settings.debug) {
+      console.log('SAML Obj: ', samlObject);
+    }
     if (!samlObject.actionName) { throw new Error('Missing SAML action'); }
 
     const service = _.find(Meteor.settings.saml, function (samlSetting) {
