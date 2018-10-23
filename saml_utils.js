@@ -358,7 +358,7 @@ SAML.prototype.validateResponse = function (samlResponse, relayState, callback) 
       const response = doc.getElementsByTagNameNS('urn:oasis:names:tc:SAML:2.0:protocol', 'Response')[0];
       if (response) {
         if (Meteor.settings.debug) {
-          console.log('Got response');
+          console.log('Got response', response);
         }
 
         let assertion = response.getElementsByTagNameNS('urn:oasis:names:tc:SAML:2.0:assertion', 'Assertion')[0];
@@ -379,8 +379,9 @@ SAML.prototype.validateResponse = function (samlResponse, relayState, callback) 
 
         const profile = {};
 
-        if (response.hasAttribute('inResponseToId')) {
-          profile.inResponseToId = response.getAttribute('inResponseToId');
+        if (response.hasAttribute('InResponseTo')) {
+          console.log('InResponseTo found', response.getAttribute('InResponseTo'));
+          profile.inResponseToId = response.getAttribute('InResponseTo');
         }
 
         const issuer = assertion.getElementsByTagNameNS('urn:oasis:names:tc:SAML:2.0:assertion', 'Issuer')[0];
