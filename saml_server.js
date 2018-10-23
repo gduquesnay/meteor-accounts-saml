@@ -366,13 +366,17 @@ middleware = function (req, res, next) {
         }
         Accounts.saml.RelayState = req.body.RelayState;
         _saml.validateResponse(req.body.SAMLResponse, req.body.RelayState, function (err, profile, loggedOut) {
+          console.log("Validating response callback", err, profile, loggedOut);
           if (err) { throw new Error(`Unable to validate response url: ${err}`); }
 
           const credentialToken = profile.inResponseToId || profile.InResponseTo || samlObject.credentialToken;
           if (!credentialToken) { throw new Error('Unable to determine credentialToken'); }
+          console.log("Saving credential token and profile", credentialToken, profile)
           Accounts.saml._loginResultForCredentialToken[credentialToken] = {
             profile,
           };
+          console.log("Credential stores now", Accounts.saml._loginResultForCredentialToken);
+          console.log("Validate complete");
           closePopup(res);
         });
         break;
