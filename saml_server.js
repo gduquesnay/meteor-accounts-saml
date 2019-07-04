@@ -388,6 +388,7 @@ middleware = function (req, res, next) {
 
     }
   } catch (err) {
+    console.log('SAML Middleware catch', err);
     closePopup(res, err);
   }
 };
